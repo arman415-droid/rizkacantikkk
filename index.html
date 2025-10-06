@@ -3,109 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Galaxy Love Music</title>
+  <title>Love Music</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Halaman Pertama -->
-  <div id="page1" class="page">
-    <h1 class="tap-text">❤‍🔥Tap Layar Cantikkk❤‍🔥</h1>
+  <!-- Halaman 1 -->
+  <div class="page page1" id="page1">
+    <h1 class="tap-text">💖 Tap Layar 💖</h1>
   </div>
 
-  <!-- Halaman Kedua -->
-  <div id="page2" class="page hidden">
-    <canvas id="loveCanvas"></canvas>
+  <!-- Halaman 2 -->
+  <div class="page page2 hidden" id="page2">
+    <div class="love-container" id="loveContainer"></div>
 
-    <!-- Tiga foto melayang -->
-    <img src="gambar1.jpg" alt="Foto 1" class="floating-photo" id="photo1">
-    <img src="gambar2.jpg" alt="Foto 2" class="floating-photo" id="photo2">
-    <img src="gambar3.jpg" alt="Foto 3" class="floating-photo" id="photo3">
+    <div class="floating-photos">
+      <img src="gambar1.jpg" alt="Foto 1" class="floating-photo" id="photo1">
+      <img src="gambar2.jpg" alt="Foto 2" class="floating-photo" id="photo2">
+      <img src="gambar3.jpg" alt="Foto 3" class="floating-photo" id="photo3">
+    </div>
 
-
-    <!-- Music Player -->
-    <div class="music-player">
-      <img src="gambar4.jpg" alt="Album Cover" class="album-cover" />
+    <div class="music-card">
+      <img src="gambar4.jpg" alt="Album Cover" class="cover">
       <h2>Bergema Sampai Selamanya</h2>
       <p>Nadhif Basalamah</p>
-      <audio controls>
-        <source src="lagu.mp3" type="audio/mpeg" />
-        Browser tidak mendukung pemutar audio.
+      <audio controls autoplay loop>
+        <source src="lagu.mp3" type="audio/mpeg">
       </audio>
     </div>
   </div>
 
   <script>
-    const page1 = document.getElementById("page1");
-    const page2 = document.getElementById("page2");
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const loveContainer = document.getElementById('loveContainer');
 
-    page1.addEventListener("click", () => {
-      page1.style.opacity = "0";
-      setTimeout(() => {
-        page1.style.display = "none";
-        page2.classList.remove("hidden");
-        page2.style.opacity = "1";
-        startHearts();
-      }, 800);
+    // Saat tap layar
+    page1.addEventListener('click', () => {
+      page1.classList.add('hidden');
+      page2.classList.remove('hidden');
+      startLoveAnimation();
     });
 
-    // Efek love
-    const canvas = document.getElementById("loveCanvas");
-    const ctx = canvas.getContext("2d");
-    let hearts = [];
+    // Fungsi membuat animasi love jatuh
+    function startLoveAnimation() {
+      setInterval(() => {
+        const love = document.createElement('div');
+        love.classList.add('love');
+        love.innerHTML = '💗';
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resize);
-    resize();
+        love.style.left = Math.random() * 100 + 'vw';
+        love.style.animationDuration = 3 + Math.random() * 3 + 's';
 
-    function randomHeart() {
-      return {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 20 + 10,
-        speedY: Math.random() * 1 + 0.5,
-        alpha: Math.random() * 0.5 + 0.5
-      };
-    }
+        loveContainer.appendChild(love);
 
-    for (let i = 0; i < 100; i++) hearts.push(randomHeart());
-
-    function drawHearts() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      hearts.forEach(h => {
-        ctx.save();
-        ctx.translate(h.x, h.y);
-        ctx.scale(h.size / 20, h.size / 20);
-        ctx.globalAlpha = h.alpha;
-        ctx.fillStyle = "pink";
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(-10, -10, -20, 10, 0, 25);
-        ctx.bezierCurveTo(20, 10, 10, -10, 0, 0);
-        ctx.fill();
-        ctx.restore();
-      });
-    }
-
-    function moveHearts() {
-      hearts.forEach(h => {
-        h.y -= h.speedY;
-        if (h.y < -30) {
-          h.y = canvas.height + 30;
-          h.x = Math.random() * canvas.width;
-        }
-      });
-    }
-
-    function startHearts() {
-      function animate() {
-        moveHearts();
-        drawHearts();
-        requestAnimationFrame(animate);
-      }
-      animate();
+        setTimeout(() => {
+          love.remove();
+        }, 6000);
+      }, 300);
     }
   </script>
 </body>
